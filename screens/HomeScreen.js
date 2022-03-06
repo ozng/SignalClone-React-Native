@@ -1,23 +1,35 @@
-import { useLayoutEffect } from 'react'
+import { useLayoutEffect, useEffect, useState } from 'react'
 import { StyleSheet, View, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import { Avatar } from 'react-native-elements'
 import { AntDesign, SimpleLineIcons } from '@expo/vector-icons';
 
 import CustomList from '../components/CustomList'
-import { auth } from '../firebase'
+import { auth, storage } from '../firebase'
 
 const HomeScreen = ({ navigation }) => {
+    const [chats, setChats] = useState([])
 
     const signOutHandler = async () => {
         try {
-            const res = await auth.signOut()
+            await auth.signOut()
             navigation.replace('Login')
         } catch (err) {
             alert(err.message)
         }
 
     }
+
+    useEffect(() => {
+        const unsubscribe = storage.collection('chats').onSnapshot(snapshots => (
+            setChats(snapshots.docs.map(doc => ({
+                id: doc.id,
+                data: doc.data()
+            })))
+        ))
+
+        return unsubscribe;
+    }, [])
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -58,12 +70,22 @@ const HomeScreen = ({ navigation }) => {
         })
     }, [navigation])
 
+    const enterChat = (id, chatName) => {
+        navigation.navigate('Chat', {
+            id, chatName
+        })
+    }
+
 
     return (
         <SafeAreaView>
-            <ScrollView>
+            <ScrollView style={styles.container}>
                 <StatusBar style='dark' />
-                <CustomList />
+                {
+                    chats.map(({ id, data }) => (
+                        <CustomList id={id} chatName={data.chatName} enterChat={enterChat} />
+                    ))
+                }
             </ScrollView>
         </SafeAreaView>
     )
@@ -71,4 +93,9 @@ const HomeScreen = ({ navigation }) => {
 
 export default HomeScreen
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    container: {
+        height: '100%',
+        backgroundColor: 'white'
+    }
+})

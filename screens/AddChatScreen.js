@@ -1,14 +1,45 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { useState } from 'react'
+import { Button, Icon, Input } from 'react-native-elements'
+import { storage } from '../firebase';
+import { StatusBar } from 'expo-status-bar';
 
-const AddChatScreen = () => {
+
+const AddChatScreen = ({ navigation }) => {
+    const [chatName, setChatName] = useState('')
+
+    const createChatHandler = async () => {
+        try {
+            await storage.collection('chats').add({
+                chatName: chatName
+            })
+
+            navigation.goBack();
+        } catch (err) {
+            alert(err.message)
+        }
+    }
+
     return (
-        <View>
-            <Text>AddChatScreen</Text>
+        <View style={styles.container}>
+            <StatusBar style='light' />
+            <Input
+                placeholder='Enter a chat name'
+                value={chatName}
+                onChangeText={text => setChatName(text)}
+                leftIcon={() => (
+                    <Icon type='antdesign' name='wechat' size={24} color="black" />
+                )}
+            />
+            <Button onPress={createChatHandler} title="Create new chat" />
         </View>
     )
 }
 
 export default AddChatScreen
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    container: {
+
+    }
+})
