@@ -6,7 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 
 
 const AddChatScreen = ({ navigation }) => {
-    const [chatName, setChatName] = useState('')
+    const [chatName, setChatName] = useState("")
 
     const createChatHandler = async () => {
         try {
@@ -14,7 +14,7 @@ const AddChatScreen = ({ navigation }) => {
                 chatName: chatName
             })
 
-            navigation.goBack();
+            navigation.navigate("Home");
         } catch (err) {
             alert(err.message)
         }
@@ -31,7 +31,7 @@ const AddChatScreen = ({ navigation }) => {
                     <Icon type='antdesign' name='wechat' size={24} color="black" />
                 )}
             />
-            <Button onPress={createChatHandler} title="Create new chat" />
+            <Button disabled={!chatName} onPress={createChatHandler} title="Create new chat" />
         </View>
     )
 }

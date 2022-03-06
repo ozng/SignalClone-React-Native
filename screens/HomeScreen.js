@@ -43,11 +43,12 @@ const HomeScreen = ({ navigation }) => {
             headerTintColor: 'black',
             headerTitleAlign: 'center',
             headerLeft: () => (
-                <View style={{ marginLeft: 20 }} >
+                <View style={{ marginLeft: 5 }} >
                     <TouchableOpacity activeOpacity={0.5} onPress={signOutHandler}>
                         <Avatar
                             source={{ uri: auth?.currentUser?.photoURL }}
                             rounded
+                            size={40}
                         />
                     </TouchableOpacity>
                 </View>
@@ -57,7 +58,7 @@ const HomeScreen = ({ navigation }) => {
                     flex: 1,
                     flexDirection: 'row',
                     alignItems: 'center',
-                    marginRight: 20
+                    marginRight: 5
                 }} >
                     <TouchableOpacity style={{ marginRight: 20 }} activeOpacity={0.5}>
                         <AntDesign name='camerao' size={24} color='black' />
@@ -83,7 +84,7 @@ const HomeScreen = ({ navigation }) => {
                 <StatusBar style='dark' />
                 {
                     chats.map(({ id, data }) => (
-                        <CustomList id={id} chatName={data.chatName} enterChat={enterChat} />
+                        <CustomList id={id} chatName={data.chatName} enterChat={enterChat} chatLength={chats.length} />
                     ))
                 }
             </ScrollView>
