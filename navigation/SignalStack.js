@@ -4,6 +4,7 @@ import Colors from '../constants/Colors';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import HomeScreen from '../screens/HomeScreen';
+import AddChatScreen from '../screens/AddChatScreen';
 
 
 const SignalStack = () => {
@@ -33,7 +34,10 @@ const SignalStack = () => {
       <Stack.Screen
         name="Home"
         component={HomeScreen}
-
+      />
+      <Stack.Screen
+        name="AddChat"
+        component={AddChatScreen}
       />
     </Stack.Navigator>
   )

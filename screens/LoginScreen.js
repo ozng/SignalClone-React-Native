@@ -23,7 +23,12 @@ const LoginScreen = ({ navigation }) => {
     }, [])
 
     const loginHandler = () => {
-        console.log("Login")
+        try {
+            auth.signInWithEmailAndPassword(email, password)
+        } catch (err) {
+            alert(err.message)
+        }
+
     }
 
     return (
@@ -54,6 +59,7 @@ const LoginScreen = ({ navigation }) => {
                                     secureTextEntry={true}
                                     value={password}
                                     onChangeText={text => setPassword(text)}
+                                    onSubmitEditing={loginHandler}
                                 />
                             </View>
                             <Button
