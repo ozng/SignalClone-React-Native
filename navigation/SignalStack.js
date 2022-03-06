@@ -1,13 +1,16 @@
 import { createStackNavigator } from '@react-navigation/stack';
+import Colors from '../constants/Colors';
+
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
+import HomeScreen from '../screens/HomeScreen';
 
 
 const SignalStack = () => {
   const Stack = createStackNavigator();
 
   const globalScreenOptions = {
-    headerStyle: { backgroundColor: '#2C6BED' },
+    headerStyle: { backgroundColor: Colors.primary },
     headerTitleStyle: { color: 'white' },
     headerTintColor: 'white',
   }
@@ -26,6 +29,11 @@ const SignalStack = () => {
         options={{
           title: 'Back to login'
         }}
+      />
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+
       />
     </Stack.Navigator>
   )

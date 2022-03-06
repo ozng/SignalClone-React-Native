@@ -2,6 +2,7 @@ import { StyleSheet, View, KeyboardAvoidingView } from 'react-native'
 import { Input, Button, Text } from 'react-native-elements'
 import React, { useState } from 'react'
 import { StatusBar } from 'expo-status-bar'
+import { auth } from '../firebase';
 
 const RegisterScreen = ({ navigation }) => {
     const [name, setName] = useState("");
@@ -9,8 +10,16 @@ const RegisterScreen = ({ navigation }) => {
     const [password, setPassword] = useState("");
     const [img, setImg] = useState("");
 
-    const registerHandler = () => {
-        console.log("Registered")
+    const registerHandler = async () => {
+        try {
+            const res = await auth.createUserWithEmailAndPassword(email, password)
+            const resData = await res.user.updateProfile({
+                displayName: name,
+                photoURL: img || "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
+            })
+        } catch (err) {
+            alert(err.message)
+        }
     }
 
     return (

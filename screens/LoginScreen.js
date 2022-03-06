@@ -1,11 +1,26 @@
-import { StyleSheet, Text, View, KeyboardAvoidingView } from 'react-native'
-import React, { useState } from 'react'
+import { StyleSheet, Text, View, KeyboardAvoidingView, ActivityIndicator } from 'react-native'
+import React, { useState, useEffect } from 'react'
 import { Button, Input, Image } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar'
+import { auth } from '../firebase'
+import Colors from '../constants/Colors';
 
 const LoginScreen = ({ navigation }) => {
+    const [loading, setIsLoading] = useState(true);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged(authUser => {
+            if (authUser) {
+                navigation.replace('Home')
+            } else {
+                setIsLoading(false)
+            }
+        })
+
+        return unsubscribe;
+    }, [])
 
     const loginHandler = () => {
         console.log("Login")
@@ -14,37 +29,48 @@ const LoginScreen = ({ navigation }) => {
     return (
         <KeyboardAvoidingView style={styles.container}>
             <StatusBar style='light' />
-            <Image source={{
-                uri: "https://upload.wikimedia.org/wikipedia/commons/5/56/Logo_Signal..png"
-            }}
-                style={styles.image}
-            />
-            <View style={styles.inputContainer}>
-                <Input
-                    placeholder='Email'
-                    autoFocus
-                    keyboardType='email-address'
-                    value={email}
-                    onChangeText={text => setEmail(text)}
-                />
-                <Input
-                    placeholder='Password'
-                    secureTextEntry={true}
-                    value={password}
-                    onChangeText={text => setPassword(text)}
-                />
-            </View>
-            <Button
-                containerStyle={styles.btn}
-                title="Login"
-                onPress={loginHandler}
-            />
-            <Button
-                containerStyle={styles.btn}
-                type="outline"
-                title="Register"
-                onPress={() => navigation.navigate('Register')}
-            />
+            {
+                loading
+                    ? (
+                        <ActivityIndicator size="large" color={Colors.primary} />
+                    )
+                    : (
+                        <>
+                            <Image source={{
+                                uri: "https://upload.wikimedia.org/wikipedia/commons/5/56/Logo_Signal..png"
+                            }}
+                                style={styles.image}
+                            />
+                            <View style={styles.inputContainer}>
+                                <Input
+                                    placeholder='Email'
+                                    autoFocus
+                                    keyboardType='email-address'
+                                    value={email}
+                                    onChangeText={text => setEmail(text)}
+                                />
+                                <Input
+                                    placeholder='Password'
+                                    secureTextEntry={true}
+                                    value={password}
+                                    onChangeText={text => setPassword(text)}
+                                />
+                            </View>
+                            <Button
+                                containerStyle={styles.btn}
+                                title="Login"
+                                onPress={loginHandler}
+                            />
+                            <Button
+                                containerStyle={styles.btn}
+                                type="outline"
+                                title="Register"
+                                onPress={() => navigation.navigate('Register')}
+                            />
+                        </>
+                    )
+            }
+
             <View style={{ height: 30 }} />
         </KeyboardAvoidingView>
     )
